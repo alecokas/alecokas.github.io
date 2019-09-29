@@ -1,2 +1,2 @@
 # alecokas.github.io
-Personal website
+Personal website and machine learning blog

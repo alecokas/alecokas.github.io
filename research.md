@@ -10,5 +10,3 @@ permalink: /research/
 ### Posters
 * A. Kastanos, A. Ragni, M.J.F. Gales, "Confidence Scores for Sequence Data, Presented at the Deep Learning Indaba 2019. [poster](/PDFs/posters/Deep_Learning_Indaba_2019.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
 * Y. Dubois, A. Kastanos, D. Lines, B. Melman, "Understanding Disentangling in VAE", University of Cambirdge, March 2019. [poster](/PDFs/posters/Understanding_Disentangling_in_VAE.pdf), [code](https://github.com/YannDubs/disentangling-vae)
-
-.
