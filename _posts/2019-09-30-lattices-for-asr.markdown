@@ -57,7 +57,7 @@ It is clear from this example that commonalities between different hypotheses ca
 
 ### Confusion networks
 <div style="text-align: justify">
-Confusion networks, also refered to as consensus networks, are an alterative topology for representing a lattice where the lattice has been transformed into a linear graph. This means that each path through the confusion network passes through all nodes in the graph. The process used to generate a confusion network from a lattice is a two stage clustering procedure which groups individual word hypotheses into time-synchronous slots. Each slot describes a set of competing word hypotheses over a single period in time [6]. This results in confusion networks having a sausage-like structure as seen in the example below.
+Confusion networks, also refered to as consensus networks, are an alternative topology for representing a lattice where the lattice has been transformed into a linear graph. This means that each path through the confusion network passes through all nodes in the graph. The process used to generate a confusion network from a lattice is a two stage clustering procedure which groups individual word hypotheses into time-synchronous slots. Each slot describes a set of competing word hypotheses over a single period in time [6]. This results in confusion networks having a sausage-like structure as seen in the example below.
 </div>
 
 <div style="text-align:center"><img src="/post_pdfs/lattices_for_asr/confusion-network.png" />
