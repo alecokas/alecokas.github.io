@@ -19,7 +19,7 @@ Before jumping into the thick of things, let's have a high-level look at the com
 
 
 <div style="text-align: justify">
-An audio recording is passed through the acoustic front-end stage which extracts features such as <a href="https://medium.com/prathena/the-dummys-guide-to-mfcc-aceab2450fd">Mel Frequency Cepstral Coefficients (MFCCs)</a> from the raw audio samples. A decoder determines the most likely sequence of words given the observed utterance, described by the feature vector. In order to determine the search space, the decoder requires an acoustic model, language model, and lexicon. The acoustic model assesses the likelihood of the acoustic sequence while the language model indicates the joint probability a particular word sequence. Since it is common for an acoustic model to operate on a sub-word level, a lexicon is required to map the sub-word level acoustic sequence to a word level acoustic sequence. Collectively, these components tackle the problem of ASR through an application of Baye's decision rule as defined by 
+An audio recording is passed through the acoustic front-end stage which extracts features such as <a href="https://medium.com/prathena/the-dummys-guide-to-mfcc-aceab2450fd">Mel Frequency Cepstral Coefficients (MFCCs)</a> from the raw audio samples. A decoder determines the most likely sequence of words given the observed utterance, described by the feature vector. In order to determine the search space, the decoder requires an acoustic model, language model, and lexicon. The acoustic model assesses the likelihood of the acoustic sequence while the language model indicates the joint probability a particular word sequence. Since it is common for an acoustic model to operate on a sub-word level, a lexicon is required to map the sub-word level acoustic sequence to a word level acoustic sequence. Collectively, these components tackle the problem of ASR through an application of Bayes' decision rule as defined by 
 </div>
 
 <p align="center">
@@ -27,11 +27,11 @@ An audio recording is passed through the acoustic front-end stage which extracts
 </p>
 
 <div style="text-align: justify">
-where the acoustic utterance is described by <img src="https://latex.codecogs.com/gif.latex?\mathbf{o}"> and the word sequence is defined by <img src="https://latex.codecogs.com/gif.latex?\mathbf{w}"> [4]. The conditional likelihood of an acoustic utterance given a word sequence, <img src="https://latex.codecogs.com/gif.latex?p(\mathbf{o} |\mathbf{w})">, is determined by the acoustic model while the language model defines the joint word probability of the word sequence <img src="https://latex.codecogs.com/gif.latex?P(\mathbf{w})">. The decoder is responcible for executing the <img src="https://latex.codecogs.com/gif.latex?\arg\max_\mathbf{w}"> operation which entails searching for the most likely transcription. 
+where the acoustic utterance is described by <img src="https://latex.codecogs.com/gif.latex?\mathbf{o}"> and the word sequence is defined by <img src="https://latex.codecogs.com/gif.latex?\mathbf{w}"> [4]. The conditional likelihood of an acoustic utterance given a word sequence, <img src="https://latex.codecogs.com/gif.latex?p(\mathbf{o} |\mathbf{w})">, is determined by the acoustic model while the language model defines the joint word probability of the word sequence <img src="https://latex.codecogs.com/gif.latex?P(\mathbf{w})">. The decoder is responsible for executing the <img src="https://latex.codecogs.com/gif.latex?\arg\max_\mathbf{w}"> operation which entails searching for the most likely transcription.
 </div>
 <br/>
 
-### One-best sequences: A simple way to represent transciptions
+### One-best sequences: A simple way to represent transcriptions
 <div style="text-align: justify">
 A straightforward implementation of the decoding process produces a sequence of words corresponding to the most probable transcription according to the maximum likelihood estimate. This single hypothesis for the audio transcription is called the one-best sequence. This is what you see on your screen when using Siri and many other voice activated systems. The one-best sequence can be represented graphically as shown below. In this illustration, each word is associated with an arc between nodes. The time stamp between each word is contained by the nodes themselves. This format is not a strict requirement of one-best sequences. We could associate the start time of each word and the word itself with the nodes in the one-best sequence. </div>
 
@@ -39,13 +39,13 @@ A straightforward implementation of the decoding process produces a sequence of 
 </div>
 
 <div style="text-align: justify">
-The problem with one-best sequences is that many speech and natural language processing applications may benefit from the information contained in the alternative hypotheses. In order to take advantage of these competing transcriptions, we would like to represent them in a form which is memory efficient and condusive to the application of machine learning. To this end, the lattice topology is introduced. </div>
+The problem with one-best sequences is that many speech and natural language processing applications may benefit from the information contained in the alternative hypotheses. In order to take advantage of these competing transcriptions, we would like to represent them in a form which is memory efficient and conducive to the application of machine learning. To this end, the lattice topology is introduced. </div>
 <br/>
 
 
 ### Lattices for representing competing hypotheses
 <div style="text-align: justify">
-A set of N alternative transcriptions, or N-best hypotheses, can be efficiently represented in a graphical structure called a lattice. Each path through the lattice corresponds with a predicted transcription for the given audio recording. The hypotheses which make up the N-best list are determined by ranking each transcription, using the maximum likelihood estimate, and selecting the N most likely word sequences. In the context of ASR, a lattice is a <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">Directed Asyclical Graph (DAG)</a> which enforces a forward information flow through time as shown below [5].
+A set of N alternative transcriptions, or N-best hypotheses, can be efficiently represented in a graphical structure called a lattice. Each path through the lattice corresponds with a predicted transcription for the given audio recording. The hypotheses which make up the N-best list are determined by ranking each transcription, using the maximum likelihood estimate, and selecting the N most likely word sequences. In the context of ASR, a lattice is a <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">Directed Asyclic Graph (DAG)</a> which enforces a forward information flow through time as shown below [5].
 </div>
 
 <div style="text-align:center"><img src="/post_pdfs/lattices_for_asr/lattice.png" />
@@ -57,7 +57,7 @@ It is clear from this example that commonalities between different hypotheses ca
 
 ### Confusion networks
 <div style="text-align: justify">
-Confusion networks, also refered to as consensus networks, are an alternative topology for representing a lattice where the lattice has been transformed into a linear graph. This means that each path through the confusion network passes through all nodes in the graph. The process used to generate a confusion network from a lattice is a two stage clustering procedure which groups individual word hypotheses into time-synchronous slots. Each slot describes a set of competing word hypotheses over a single period in time [6]. This results in confusion networks having a sausage-like structure as seen in the example below.
+Confusion networks, also referred to as consensus networks, are an alternative topology for representing a lattice where the lattice has been transformed into a linear graph. This means that each path through the confusion network passes through all nodes in the graph. The process used to generate a confusion network from a lattice is a two stage clustering procedure which groups individual word hypotheses into time-synchronous slots. Each slot describes a set of competing word hypotheses over a single period in time [6]. This results in confusion networks having a sausage-like structure as seen in the example below.
 </div>
 
 <div style="text-align:center"><img src="/post_pdfs/lattices_for_asr/confusion-network.png" />
