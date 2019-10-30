@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Improving Confidence Estimates in Black-Box ASR"
+title:  "Improving Confidence Estimates for Black-Box ASR"
 date:   2019-10-31 09:00:00 +0100
 categories: ASR, Confidence
 ---
