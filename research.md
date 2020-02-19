@@ -8,7 +8,7 @@ permalink: /research/
 * A. Kastanos, "Uncertainty and Confidence Scores for Sequence Data", University of Cambridge, August 2019. [pdf](/PDFs/thesis/Uncertainty_and_Confidence_Scores_in_Sequence_Data.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
 
 ### Papers
-* A. Kastanos, A. Ragni, M.J.F. Gales, "Confidence Estimation for Black Box Automatic Speech Recognition Systems Using Lattice Recurrent Neural Networks", arXiv:1910.11933 [eess.AS], Oct. 2019. (Currently under review) [paper](https://arxiv.org/pdf/1910.11933.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence) 
+* A. Kastanos, A. Ragni, M.J.F. Gales, "Confidence Estimation for Black Box Automatic Speech Recognition Systems Using Lattice Recurrent Neural Networks", ICASSP, 2020 [paper](https://arxiv.org/pdf/1910.11933.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence) 
 
 ### Posters
 * A. Kastanos, A. Ragni, M.J.F. Gales, "Confidence Scores for Sequence Data, Presented at the Deep Learning Indaba 2019. [poster](/PDFs/posters/Deep_Learning_Indaba_2019.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
