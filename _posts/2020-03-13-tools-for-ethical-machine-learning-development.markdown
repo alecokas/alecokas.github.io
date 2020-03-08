@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Tools for Ethical Machine Learning Development"
-date:   2020-03-01 09:00:00 +0100
+date:   2020-03-13 09:00:00 +0100
 categories: Ethics
 ---
 
@@ -38,7 +38,9 @@ The relative importance of each of these sections will vary depending on the spe
 Once an ethics checklist has been set up, one way to assess the predictions being made by the model is by an <em>audit</em>. This involves a programmatic assessment of the model predictions as well as the ground truth labels with the aim of uncovering biases or prejudice. From the obvious applications, such as medical and autonomous vehicles, through to legal and financial recommendations, the importance of ensuring fair models is essential. The Center for Data Science and Public Policy at the University of Chicago have developed a bias and fairness audit tool called <a href="http://www.datasciencepublicpolicy.org/projects/aequitas/">Aequitas</a>. Aequitas can be used as a Python library, a command line tool, or via a web interface to generate a report as well as detailed statistics about bias and fairness in your model. This assessment is done for a number of bias metrics which are defined in the <em>fairness tree</em>:
 </div>
 
-<img src="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png">
+<!-- <img src="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png"> -->
+<div style="text-align:left"><img src="/post_pdfs/tools_for_ethical_machine_learning_development/Fairness-Weeds-1200x897.png" />
+</div><br/>
 
 <div style="text-align: justify">
 From left to right, the parities depicted in the bottom row of the fairness tree are:
@@ -51,10 +53,9 @@ From left to right, the parities depicted in the bottom row of the fairness tree
   <li>False Omission Rate</li>
   <li>False Negative Rate</li>
 </ul>
-Although some guidelines are provided in the fairness tree, determining which metric is most critical depends on the particular circumstances of your application. I believe that audit tools, such as Aequitas, together carefully selected metrics provide a starting point from which evaluating and benchmarking unfair bias within a model can be documented and iteratively reduced. To find out more about the details of Aequitas read the paper references below.
+Although some guidelines are provided in the fairness tree, determining which metric is most critical depends on the particular circumstances of your application. I believe that audit tools, such as Aequitas, together carefully selected metrics provide a starting point from which evaluating and benchmarking unfair bias within a model can be documented and iteratively reduced. To find out more about the details of Aequitas read the paper in the references below are have a look at the <a href="https://github.com/dssg/aequitas">repository</a>.
 </div>
 <br/>
-
 
 #### References
 Saleiro, Pedro, et al. "Aequitas: A bias and fairness audit toolkit." arXiv preprint arXiv:1811.05577 (2018).
