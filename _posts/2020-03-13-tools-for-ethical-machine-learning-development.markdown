@@ -6,13 +6,17 @@ categories: Ethics
 ---
 
 <div style="text-align: justify">
-Making use of simple tools to reinforce the importance of ethical development in machine learning can go a long way to ensuring that our solutions meet a standard of fairness and are ethically sound. This is particularly important when operating under time constraints or when putting forward a new explorative project. In this post, I'm going to (very briefly) advocate two ideas simple ideas for assisting a more ethically conscious workflow: <em>ethics checklists</em> and <em>model audits</em>.
+Making use of simple tools to reinforce the importance of ethical development in machine learning can go a long way to ensuring that our solutions meet a standard of fairness and are ethically sound. This is particularly important when operating under time constraints or when putting forward a new explorative project. In this post, I'm going to (very briefly) advocate two simple ideas for assisting a more ethically conscious workflow: <em>ethics checklists</em> and <em>model audits</em>.
 </div>
 <br/>
 
 ### Ethics checklists
 <div style="text-align: justify">
-A checklist of ethical questions can act as a concrete reference point or simply a central motif to spark actionable debate when considering how to procede with new or existing machine learning models. Recently, I came across <a href="https://deon.drivendata.org//">Deon</a>, an open source Python tool which can be used to simply add an ethics checklist to new or existing machine learning projects. The idea behind Deon is that just like we expect a <code>README.md</code> file to provide the starting point for a project's documentation, we should expect an <code>ETHICS.md</code> file containing an explicit checklist of ethical considerations which dictates how the machine learning or data science project is developed. The Deon command line tool makes this actionable by providing a simple interface to generate and customise such an ethics checklist. To use their default checklist (which is a great starting point), simply run the following:
+A checklist of ethical questions can act as a concrete reference point, or simply a central motif, from which to spark actionable debate about how to move forward with new or existing machine learning models. Recently, I came across <a href="https://deon.drivendata.org//">Deon</a>, an open source Python tool which can be used to add an ethics checklist to a machine learning project. The idea behind this is that we should maintain an <code>ETHICS.md</code> document containing an explicit checklist of ethical considerations and precautions taken during the development of our projects. Examples of items in the checklist include: user privacy, data biases, proxy discrimination. This mirrors the <code>README.md</code> type appraoch to documentation, which I believe strikes a good balance between simplicity and utility. 
+</div>
+<br/>
+<div style="text-align: justify">
+The Deon command line tool makes this actionable by providing a simple interface to generate and customise such an ethics checklist. To use their default checklist (which is a great starting point), simply run the following:
 
 <pre>$ pip install deon
 $ deon -o ETHICS.md</pre>
@@ -29,13 +33,28 @@ The relative importance of each of these sections will vary depending on the spe
 </div>
 <br/>
 
-### Auditing a model
+### Model audits
 <div style="text-align: justify">
+Once an ethics checklist has been set up, one way to assess the predictions being made by the model is by an <em>audit</em>. This involves a programmatic assessment of the model predictions as well as the ground truth labels with the aim of uncovering biases or prejudice. From the obvious applications, such as medical and autonomous vehicles, through to legal and financial recommendations, the importance of ensuring fair models is essential. The Center for Data Science and Public Policy at the University of Chicago have developed a bias and fairness audit tool called <a href="http://www.datasciencepublicpolicy.org/projects/aequitas/">Aequitas</a>. Aequitas can be used as a Python library, a command line tool, or via a web interface to generate a report as well as detailed statistics about bias and fairness in your model. This assessment is done for a number of bias metrics which are defined in the <em>fairness tree</em>:
+</div>
+
+<img src="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png" alt="" title="Fairness Weeds" class="img-responsive wp-image-926" srcset="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-200x149.png 200w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-400x299.png 400w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-600x448.png 600w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-800x598.png 800w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-1200x897.png 1200w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png 2905w" sizes="(max-width: 800px) 100vw, 1200px">
+
+<div style="text-align: justify">
+From left to right, the parities depicted in the bottom row of the fairness tree are:
+<ul>
+  <li>False Positive</li>
+  <li>False Discovery Rate</li>
+  <li>False Positive Rate</li>
+  <li>Recall</li>
+  <li>False Negative</li>
+  <li>False Omission Rate</li>
+  <li>False Negative Rate</li>
+</ul>
+Although some guidelines are provided in the fairness tree, determining which metric is most critical depends on the particular circumstances of your application. I believe that audit tools, such as Aequitas, together carefully selected metrics provide a starting point from which evaluating and benchmarking unfair bias within a model can be documented and iteratively reduced. To find out more about the details of Aequitas read the paper references below.
 </div>
 <br/>
 
-### TL;DR
-<div style="text-align: justify">
-We wrote a paper which argues for obtaining richer features and competing hypothesis information from black-box ASR systems in order to improve confidence scores.
-</div>
-<br/>
+
+#### References
+Saleiro, Pedro, et al. "Aequitas: A bias and fairness audit toolkit." arXiv preprint arXiv:1811.05577 (2018).
