@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Tools for Ethical Machine Learning Development"
-date:   2020-03-13 09:00:00 +0100
+date:   2020-03-01 09:00:00 +0100
 categories: Ethics
 ---
 
@@ -38,7 +38,7 @@ The relative importance of each of these sections will vary depending on the spe
 Once an ethics checklist has been set up, one way to assess the predictions being made by the model is by an <em>audit</em>. This involves a programmatic assessment of the model predictions as well as the ground truth labels with the aim of uncovering biases or prejudice. From the obvious applications, such as medical and autonomous vehicles, through to legal and financial recommendations, the importance of ensuring fair models is essential. The Center for Data Science and Public Policy at the University of Chicago have developed a bias and fairness audit tool called <a href="http://www.datasciencepublicpolicy.org/projects/aequitas/">Aequitas</a>. Aequitas can be used as a Python library, a command line tool, or via a web interface to generate a report as well as detailed statistics about bias and fairness in your model. This assessment is done for a number of bias metrics which are defined in the <em>fairness tree</em>:
 </div>
 
-<img src="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png" alt="" title="Fairness Weeds" class="img-responsive wp-image-926" srcset="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-200x149.png 200w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-400x299.png 400w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-600x448.png 600w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-800x598.png 800w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds-1200x897.png 1200w, http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png 2905w" sizes="(max-width: 800px) 100vw, 1200px">
+<img src="http://www.datasciencepublicpolicy.org/wp-content/uploads/2020/02/Fairness-Weeds.png">
 
 <div style="text-align: justify">
 From left to right, the parities depicted in the bottom row of the fairness tree are:
