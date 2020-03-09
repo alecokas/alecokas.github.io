@@ -6,7 +6,7 @@ categories: Ethics
 ---
 
 <div style="text-align: justify">
-Making use of simple tools to reinforce the importance of ethical development in machine learning can go a long way to ensuring that our solutions meet a standard of fairness and are ethically sound. This is particularly important when operating under time constraints or when putting forward a new explorative project. In this post, I'm going to (very briefly) advocate two simple ideas for assisting a more ethically conscious workflow: <em>ethics checklists</em> and <em>model audits</em>.
+Making use of simple tools to reinforce the importance of ethical development in machine learning can go a long way to ensuring that our solutions meet a standard of fairness and are morally sound. This is particularly important when operating under time constraints or when putting forward a new explorative project. In this post, I'm going to (very briefly) advocate two simple ideas for assisting a more ethically conscious workflow: <em>ethics checklists</em> and <em>model audits</em>.
 </div>
 <br/>
 
@@ -29,13 +29,13 @@ The default checklist groups 20 items into 5 sections:
   <li>Modeling</li>
   <li>Deployment</li>
 </ol>  
-The relative importance of each of these sections will vary depending on the specifics of your project. For instance, one can imagine that an industry application may require a higher standard for data storage and deploment items than a internal academic project. Take a look at the Deon <a href="https://github.com/drivendataorg/deon/">repository</a> and <a href="https://github.com/drivendataorg/deon/wiki/Overview">wiki</a> for more information on how to use their tool how ethics checklists can support your machine learning project.
+The relative importance of each of these sections will vary depending on the specifics of your project. Furthermore, one can imagine that an industry application may require a higher standard for data storage and deploment items than a internal academic project. An example of an issue which could have benefitted from an ethical checklist is <a href="http://content.time.com/time/business/article/0,8599,1954643,00.html">Nikon's facial recognition</a> system detecting Asian eyes as being closed. The collection bias item in Deon's default checklist may have raised enough questions for an appropreate dataset which includes Asian faces to be curated. Take a look at the Deon <a href="https://github.com/drivendataorg/deon/">repository</a> and <a href="https://github.com/drivendataorg/deon/wiki/Overview">wiki</a> for more information on how to use their tool how ethics checklists can support your machine learning project.
 </div>
 <br/>
 
 ### Model audits
 <div style="text-align: justify">
-Once an ethics checklist has been set up, one way to assess the fairness of the predictions being made by the model is by an <em>audit</em>. This involves a programmatic assessment of the model predictions as well as the ground truth labels with the aim of uncovering biases or prejudice. From obvious applications, such as medical and autonomous vehicles, through to legal and financial recommendations, the importance of ensuring fair models is essential. The Center for Data Science and Public Policy at the University of Chicago have developed a bias and fairness audit tool called <a href="http://www.datasciencepublicpolicy.org/projects/aequitas/">Aequitas</a>. Aequitas can be used as a Python library, a command line tool, or via a web interface to generate a report as well as detailed statistics about biases and the fairness in your model. This assessment is done for a number of bias metrics, defined in the <em>fairness tree</em>.
+Once an ethics checklist has been set up, one way to assess the fairness of the predictions being made by the model is by an <em>audit</em>. This involves a programmatic assessment of the model predictions as well as the ground truth labels with the aim of uncovering biases or prejudice. From obvious applications, such as medical and autonomous vehicles, through to legal and financial recommendations, the importance of ensuring fair models is essential. <em>The Center for Data Science and Public Policy</em> at <em>the University of Chicago</em> have developed a bias and fairness audit tool called <a href="http://www.datasciencepublicpolicy.org/projects/aequitas/">Aequitas</a>. Aequitas can be used as a Python library, a command line tool, or via a web interface to generate a report as well as detailed statistics about biases and the fairness in your model. This assessment is done for a number of bias metrics, defined in the <em>fairness tree</em>.
 </div>
 
 <div style="text-align:left"><img src="/post_pdfs/tools_for_ethical_machine_learning_development/Fairness-Weeds-1200x897.png" />
@@ -52,7 +52,7 @@ From left to right, the parities depicted in the bottom row of the fairness tree
   <li>False Omission Rate</li>
   <li>False Negative Rate</li>
 </ul>
-Although some guidelines are provided in the fairness tree, determining which metric is most critical depends on the particular circumstances of your application. I believe that audit tools, such as Aequitas, together with carefully selected metrics provide a starting point from which evaluating and benchmarking unfair bias within a model can be documented and iteratively reduced. To find out more about the details of Aequitas read the paper in the references below are have a look at the <a href="https://github.com/dssg/aequitas">repository</a>.
+Although some guidelines are provided in the fairness tree, determining which metric is most critical depends on the particular circumstances of your application. I believe that audit tools, such as Aequitas, together with carefully selected metrics provide a starting point from which evaluating and benchmarking unfair bias within a model can be documented and iteratively reduced. To find out more about the details of Aequitas, read the paper in the references below and have a look at the <a href="https://github.com/dssg/aequitas">repository</a>.
 </div>
 <br/>
 
