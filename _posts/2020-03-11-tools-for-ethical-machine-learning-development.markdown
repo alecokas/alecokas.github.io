@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Tools for Ethical Machine Learning Development"
-date:   2020-03-09 09:00:00 +0000
+date:   2020-03-11 09:00:00 +0000
 categories: Ethics
 ---
 
@@ -12,7 +12,7 @@ Making use of simple tools to reinforce the importance of ethical development in
 
 ### Ethics checklists
 <div style="text-align: justify">
-A checklist of ethical questions can act as a concrete reference point, or simply a central motif, from which to spark actionable debate about how to move forward with new or existing machine learning models. Recently, I came across <a href="https://deon.drivendata.org//">Deon</a>, an open source Python tool which can be used to add an ethics checklist to a machine learning project. The idea behind this is that we should maintain an <code>ETHICS.md</code> document containing an explicit checklist of ethical considerations and precautions taken during the development of our projects. Examples of items in the checklist include: user privacy, data biases, proxy discrimination. This mirrors the <code>README.md</code> type appraoch to documentation, which I believe strikes a good balance between simplicity and utility. 
+A checklist of ethical questions can act as a concrete reference point, or simply a central motif, from which to spark actionable debate about how to move forward with new or existing machine learning models. Recently, I came across <a href="https://deon.drivendata.org//">Deon</a>, an open source Python tool which can be used to add an ethics checklist to a machine learning project. The idea behind this is that we should maintain an <code>ETHICS.md</code> document containing an explicit checklist of ethical considerations and precautions taken during the development of our projects. Examples of items in the checklist include: user privacy, data biases, and proxy discrimination. This mirrors the <code>README.md</code> type appraoch to documentation, which I believe strikes a good balance between simplicity and utility. 
 </div>
 <br/>
 <div style="text-align: justify">
@@ -29,7 +29,7 @@ The default checklist groups 20 items into 5 sections:
   <li>Modeling</li>
   <li>Deployment</li>
 </ol>  
-The relative importance of each of these sections will vary depending on the specifics of your project. Furthermore, one can imagine that an industry application may require a higher standard for data storage and deploment items than a internal academic project. An example of an issue which could have benefitted from an ethical checklist is <a href="http://content.time.com/time/business/article/0,8599,1954643,00.html">Nikon's facial recognition</a> system detecting Asian eyes as being closed. The collection bias item in Deon's default checklist may have raised enough questions for an appropriate dataset which includes Asian faces to be curated. Take a look at the Deon <a href="https://github.com/drivendataorg/deon/">repository</a> and <a href="https://github.com/drivendataorg/deon/wiki/Overview">wiki</a> for more information on how to use their tool how ethics checklists can support your machine learning project.
+The relative importance of each of these sections will vary depending on the specifics of your project. Furthermore, one can imagine that an industry application may be required to uphold a higher standard for the data storage and deploment items than perhaps a internal academic project. An example of an issue which could have benefitted from an ethical checklist is <a href="http://content.time.com/time/business/article/0,8599,1954643,00.html">Nikon's facial recognition</a> system detecting Asian eyes as being closed. The collection bias item in Deon's default checklist may have raised enough questions for an appropriate dataset which includes Asian faces to be curated. Take a look at the Deon <a href="https://github.com/drivendataorg/deon/">repository</a> and <a href="https://github.com/drivendataorg/deon/wiki/Overview">wiki</a> for more information on how to use their tool, and how an ethics checklist can support your machine learning project.
 </div>
 <br/>
 
