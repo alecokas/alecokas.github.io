@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Tools for Ethical Machine Learning Development"
-date:   2020-03-11 09:00:00 +0000
+date:   2020-03-11 10:00:00 +0000
 categories: Ethics
 ---
 
