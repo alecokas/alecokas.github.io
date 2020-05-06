@@ -16,7 +16,7 @@
 title: Aleco Kastanos
 email: alecokastanos@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
- Personal website and machine learning blog for Aleco Kastanos.
+ Personal website and machine learning blog
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: alecokas
