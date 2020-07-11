@@ -36,25 +36,179 @@ function get_train_loader(batch_size, shuffle::Bool)
     return DataLoader(train_x, train_y, batchsize=batch_size, shuffle=shuffle, partial=false)
 end
 {% endhighlight %}
+<br/>
 
-### Defining the model
+#### Defining the model
+Next, we have a method which defines a fairly typical Convolutional VAE architecture. The encoder is defined by chaining 3 convolutional layers, with a kernel width of 4 and 32 filters. The output from these layers is then flattened before being pushed to two dense layers with 256 neurons each. This portion of the encoder which we call `encoder_features` has two separate fully connected layers branching off it to provide us with the networks which generate the mean ($$\mu$$) and logarithmic variance (logvar) vectors. We use the log variance, rather than the variance, so that we can leave the `encoder_logvar` network unconstrained and not worry about how forcing the network to only produce positive values might effect the optimisation process. <br/>
+The decoder is defined to look like the transpose of the encoder where we expect the input from the latent space, $$ z $$, to have the same dimensionality of the $$\mu$$ vector produced by the encoder. Something key to note in the decoder is that we have defined a custom layer `Reshape` rather than using the operation <code>x -> reshape(x, (4, 4, 32, :))</code>. This custom layer is able to be saved and loaded using the `BSON` package while the build in `reshape` operation caused problems when I tried to forward pass a model loaded from disk.
 
 
-
-
-### Diving into the code
 {% highlight julia %}
-function foo()
-  println("Foo")
+struct Reshape
+    shape
+end
+Reshape(args...) = Reshape(args)
+(r::Reshape)(x) = reshape(x, r.shape)
+Flux.@functor Reshape ()
+
+function create_vae()
+    # Define the encoder and decoder networks
+    encoder_features = Chain(
+        Conv((4, 4), 1 => 32, relu; stride = 2, pad = 1),
+        Conv((4, 4), 32 => 32, relu; stride = 2, pad = 1),
+        Conv((4, 4), 32 => 32, relu; stride = 2, pad = 1),
+        Flux.flatten,
+        Dense(32 * 4 * 4, 256, relu),
+        Dense(256, 256, relu)
+    )
+    encoder_μ = Chain(encoder_features, Dense(256, 10))
+    encoder_logvar = Chain(encoder_features, Dense(256, 10))
+
+    decoder = Chain(
+        Dense(10, 256, relu),
+        Dense(256, 256, relu),
+        Dense(256, 32 * 4 * 4, relu),
+        Reshape(4, 4, 32, :),
+        ConvTranspose((4, 4), 32 => 32, relu; stride = 2, pad = 1),
+        ConvTranspose((4, 4), 32 => 32, relu; stride = 2, pad = 1),
+        ConvTranspose((4, 4), 32 => 1; stride = 2, pad = 1)
+    )
+    return encoder_μ, encoder_logvar, decoder
 end
 {% endhighlight %}
-<!-- <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight">
-<code>
-import Statistics
-def this():
-    pass
+<br/>
 
-</code></pre></div></div> -->
+#### The training loop
+Flux allows custom training loop, this is great for allowing custom progress tracking and metric logging code. The `train()` function below takes in the three `Chain` components which make up our VAE, the `dataloader` described above, as well as some key training parameters. These include a weight decay regularisation parameter ($$\lambda$$), a hyperparameter which controls the relative importance of disentangling factors of variation ($$\beta$$), amongst others. For each batch, we calculate the loss as defined in `vae_loss()` and generate a pullback from which to calculate the gradients.
+
+{% highlight julia %}
+function train(encoder_μ, encoder_logvar, decoder, dataloader, num_epochs, λ, β, optimiser, save_dir)
+    # The training loop for the model
+    trainable_params = Flux.params(encoder_μ, encoder_logvar, decoder)
+
+    for epoch_num = 1:num_epochs
+        acc_loss = 0.0
+        progress_tracker = Progress(length(dataloader), 1, "Training epoch $epoch_num: ")
+        for (x_batch, y_batch) in dataloader
+            # pullback function returns the result (loss) and a pullback operator (back)
+            loss, back = pullback(trainable_params) do
+                vae_loss(encoder_μ, encoder_logvar, decoder, x_batch, β, λ)
+            end
+            # Feed the pullback 1 to obtain the gradients and update then model parameters
+            gradients = back(1f0)
+            Flux.Optimise.update!(optimiser, trainable_params, gradients)
+            if isnan(loss)
+                break
+            end
+            acc_loss += loss
+            next!(progress_tracker; showvalues=[(:loss, loss)])
+        end
+        @assert length(dataloader) > 0
+        avg_loss = acc_loss / length(dataloader)
+        metrics = DataFrame(epoch=epoch_num, negative_elbo=avg_loss)
+        println(metrics)
+        CSV.write(joinpath(save_dir, "metrics.csv"), metrics, header=(epoch_num==1), append=true)
+        save_model(encoder_μ, encoder_logvar, decoder, save_dir, epoch_num)
+    end
+    println("Training complete!")
+end
+{% endhighlight %}
+<br/>
+
+#### Calculating the loss
+Before we can train our model, we need to define the loss function `vae_loss()`. The method takes in our mean and logvar encoders, the decoder, the batch of images to train on, $$x$$, as well as the $$ \beta $$ and $$ \lambda $$ hyperparameters. First $$x$$ is fed through the encoder to generate our mean and log variance vectors. We then sample from $$q(z|x)$$ using the reparameterisation trick, where we obtain the standard deviation through log manipulation, to obtain $$ z $$. The reconstructed image is generated by pushing $$z$$ through the decoder. The ELBO is calculated by substracting the reverse KL divergence from the negative reconstriction loss. Finally, the function returns the sum of the negative ELBO and an $$L_{2}$$ weight decay regularisation term. As mentioned above, we actually want to maximise the ELBO, but in the context of a code implementation, it is more intuitive to minimise the negative ELBO. 
+
+{% highlight julia %}
+function vae_loss(encoder_μ, encoder_logvar, decoder, x, β, λ)
+    batch_size = size(x)[end]
+    @assert batch_size != 0
+
+    # Forward propagate through mean encoder and std encoders
+    μ = encoder_μ(x)
+    logvar = encoder_logvar(x)
+    # Apply reparameterisation trick to sample latent
+    z = μ + randn(Float32, size(logvar)) .* exp.(0.5f0 * logvar)
+    # Reconstruct from latent sample
+    x̂ = decoder(z)
+    # Negative reconstruction loss Ε_q[logp_x_z]
+    logp_x_z = -sum(logitbinarycrossentropy.(x̂, x)) / batch_size
+    # KL(qᵩ(z|x)||p(z)) where p(z)=N(0,1) and qᵩ(z|x) models the encoder i.e. reverse KL
+    # The @. macro makes sure that all operates are elementwise
+    kl_q_p = 0.5f0 * sum(@. (exp(logvar) + μ^2 - logvar - 1f0)) / batch_size
+    # Weight decay regularisation term
+    reg = λ * sum(x->sum(x.^2), Flux.params(encoder_μ, encoder_logvar, decoder))
+    # We want to maximise the evidence lower bound (ELBO)
+    elbo = logp_x_z - β .* kl_q_p
+    # So we minimise the sum of the negative ELBO and a weight penalty
+    return -elbo + reg
+end
+{% endhighlight %}
+<br/>
+
+#### Show me some images!
+That is the main modelling done! For demonstration purposes, I trained the model for 10 epochs, using Flux's Adam optimiser with a learning rate of 0.0001, and saved it to disk. Before we can have a look at some images, lets define a test data loader (which is very similar to the training data loader) and a function to save our images to disk.
+
+{% highlight julia %}
+function get_test_loader(batch_size, shuffle::Bool)
+    # The FashionMNIST test set is made up of 10k 28 by 28 greyscale images
+    test_x, test_y = FashionMNIST.testdata(Float32)
+    test_x = reshape(test_x, (28, 28, 1, :))
+    test_x = parent(padarray(test_x, Fill(0, (2,2,0,0))))
+    return DataLoader(test_x, test_y, batchsize=batch_size, shuffle=shuffle)
+end
+
+function save_to_images(x_batch, save_dir::String, prefix::String, num_images::Int64)
+    @assert num_images <= size(x_batch)[4]
+    for i=1:num_images
+        save(joinpath(save_dir, "$prefix-$i.png"), colorview(Gray, permutedims(x_batch[:,:,1,i], (2, 1))))
+    end
+end
+{% endhighlight %}
+
+Additionally, we define a function to pass images through the VAE to reconstruct images from the unseen test set. A key thing to note is that we apply the `sigmoid` activation to the reconstructed images so that they are normalised appropriately.
+
+{% highlight julia %}
+function reconstruct_images(encoder_μ, encoder_logvar, decoder, x)
+    # Forward propagate through mean encoder and std encoders
+    μ = encoder_μ(x)
+    logvar = encoder_logvar(x)
+    # Apply reparameterisation trick to sample latent
+    z = μ + randn(Float32, size(logvar)) .* exp.(0.5f0 * logvar)
+    # Reconstruct from latent sample
+    x̂ = decoder(z)
+    return sigmoid.(x̂)
+end
+{% endhighlight %}
+
+Now there is nothing left to do than load the trained VAE from disk, and set up a loop where we reconstruct test set images to the corresponding original.
+{% highlight julia %}
+function load_model(load_dir::String, epoch::Int)
+    print("Loading model...")
+    @load joinpath(load_dir, "model-$epoch.bson") encoder_μ encoder_logvar decoder
+    println("Done")
+    return encoder_μ, encoder_logvar, decoder
+end
+
+function visualise()
+    batch_size = 64
+    shuffle = true
+    num_images = 8
+    epoch_to_load = 10
+
+    encoder_μ, encoder_logvar, decoder = load_model("results", epoch_to_load)
+    dataloader = get_test_loader(batch_size, shuffle)
+
+    for (x_batch, y_batch) in dataloader
+        save_to_images(x_batch, "results", "test-image", num_images)
+        x̂_batch = reconstruct_images(encoder_μ, encoder_logvar, decoder, x_batch)
+        save_to_images(x̂_batch, "results", "reconstruction", num_images)
+        break
+    end
+end
+{% endhighlight %}
+
+Let's have a look at those results:
+
 
 <!-- <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight">
 <code>@article{kastanos20fluxvae,
