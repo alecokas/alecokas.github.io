@@ -145,7 +145,7 @@ end
 {% endhighlight %}
 <br/>
 
-#### Show me some images!
+#### Evaluate a trained model
 That is the main modelling done! For demonstration purposes, I trained the model for 10 epochs, using Flux's Adam optimiser with a learning rate of 0.0001, and saved it to disk. Before we can have a look at some images, lets define a test data loader (which is very similar to the training data loader) and a function to save our images to disk.
 
 {% highlight julia %}
@@ -206,11 +206,26 @@ function visualise()
     end
 end
 {% endhighlight %}
+<br/>
 
-Let's have a look at those results:
+#### Show me some images!
+The two side-by-side images below demonstrate the reconstruction ability of the VAE on unseen data after training for 10 epochs. The set of images on the left are taken from the test set, while the images on the right are generated from the model. We see that the model has learnt a good enough latent representation to reconstruct the original samples to a reasonable degree of accuracy. That being said, the reconstructed images are a certainly blurrier than the corresponding original images. This is a common problem in VAEs, which due to the reverse KL term in their objective, exhibit zero-forcing properties and therefore suffer from over-dispertion.  
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+</style>
+<img src="/post_pdfs/convolutional_vae_in_flux/recon.png" alt="reconstruction-drawing" width="400"  class="center"/>
+<br/>
+### Other VAEs
+It is worth mentioning that there have been numerous variations on the VAE architecture. Some of interesting examples include [β-VAE](https://arxiv.org/abs/1804.03599) and [NVAE](https://arxiv.org/abs/2007.03898). Furthermore if you are specifically interested in disentangling in VAE, take a look at [this work](https://github.com/YannDubs/disentangling-vae) I was involved in where we investigated and constrasted a number of disentangling VAE architectures.
 
-
-<!-- <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight">
+<br/>
+To cite this post:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight">
 <code>@article{kastanos20fluxvae,
   title   = "Convolutional VAE in Flux",
   author  = "Alexandros Kastanos",
@@ -218,4 +233,19 @@ Let's have a look at those results:
   year    = "2020",
   url     = "http://127.0.0.1:4000/julia/flux/vae/2020/07/10/convolutional-vae-in-flux.html"
 }
-</code></pre></div></div> -->
+</code></pre></div></div>
+
+### References
+https://arxiv.org/pdf/1907.11891.pdf
+https://arxiv.org/pdf/2006.10599.pdf
+https://arxiv.org/abs/2007.03898
+https://arxiv.org/abs/1804.03599
+https://arxiv.org/abs/1312.6114
+https://openreview.net/pdf?id=Sy2fzU9gl
+@article{innes:2018,
+  author    = {Mike Innes},
+  title     = {Flux: Elegant Machine Learning with Julia},
+  journal   = {Journal of Open Source Software},
+  year      = {2018},
+  doi       = {10.21105/joss.00602},
+}
