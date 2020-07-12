@@ -10,6 +10,8 @@ In this post, we'll have a look at variational autoencoders and demonstrate how 
 ### Formulating the Variational Autoencoder
 Before looking at the implementation, I'll present a short overview of autoencoders and the differentiating features of a variational autoencoder (VAE). For a full description of the background and how the loss function is derived, have a look at the original VAE paper: [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114).
 
+<div style="text-align:center"><img src="/post_pdfs/convolutional_vae_in_flux/vae.png" width="500"/>
+</div><br/>
 
 #### Autoencoders
 An autoencoder is made up of two principle components, the encoder and the decoder. The role of the encoder is to extract learnt features from the input data, $$ x $$, and represent them in a constrained latent space, $$ z $$. Ideally, this latent space, sometimes called the <i>bottleneck</i> layer, is a respresentation of the compressed underlying characteristics of the data. The decoder then generates a reconstruction of the original image, $$ \hat{x} $$, which we want to closely resemble the input data. If the encoder and decoders are modelled using neural networks, we can train the autoencoder to minimise the reconstruction loss between $$ x $$ and $$ \hat{x} $$.
@@ -20,6 +22,7 @@ As before, we define our loss function such that we minimise the reconstruction 
 
 $$ \mathcal{L}(\theta, \phi; x, z)  = \mathbb{E}_{q_{\phi}(z|x)}[log(p_{\theta}(x|z))] - D_{KL}(q_{\phi(z|x)}\|p(z))$$
 
+<br/>
 ### Building the VAE in Flux
 
 #### Loading the FashionMNIST dataset
