@@ -238,7 +238,7 @@ The two side-by-side images below demonstrate the reconstruction ability of the 
 <img src="/post_pdfs/convolutional_vae_in_flux/recon.png" alt="reconstruction-drawing" width="400"  class="center"/>
 <br/>
 ### Other VAEs
-It is worth mentioning that there have been numerous variations on the VAE architecture. Some of interesting examples include [β-VAE](https://arxiv.org/abs/1804.03599) and [NVAE](https://arxiv.org/abs/2007.03898). Furthermore if you are specifically interested in disentangling in VAE, take a look at [this work](https://github.com/YannDubs/disentangling-vae) I was involved in where we investigated and constrasted a number of disentangling VAE architectures.
+It is worth mentioning that there have been numerous variations on the VAE architecture. Some interesting examples include [β-VAE](https://arxiv.org/abs/1804.03599), [$$JS^{G_α}$$-VAEs](https://arxiv.org/abs/2006.10599), and [NVAE](https://arxiv.org/abs/2007.03898). Furthermore if you are specifically interested in disentangling in VAE, take a look at [this work](https://github.com/YannDubs/disentangling-vae) I was involved in where we investigated and constrasted a number of disentangling VAE architectures.
 
 <br/>
 To cite this post:
