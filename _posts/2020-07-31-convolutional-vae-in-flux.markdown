@@ -23,7 +23,9 @@ As before, we define our loss function such that we minimise the reconstruction 
 $$ \mathcal{L}(\theta, \phi; x, z)  = \mathbb{E}_{q_{\phi}(z|x)}[log(p_{\theta}(x|z))] - D_{KL}(q_{\phi(z|x)}\|p(z))$$
 
 <br/>
+
 ### Building the VAE in Flux
+The rest of the post moves away from the theory and steps through an example of how to implement a Convolutional VAE using Flux. The code snippets to follow are taken from my Github repository, so head over there if you want to simply jumpy to the complete implementation. Let's get started with learning how to leverage dataloaders to easily import the FashionMNIST dataset.
 
 #### Loading the FashionMNIST dataset
 FashionMNIST is an incredibly popular benchmarking dataset, made up of low-resolution greyscale images of clothes, which operates as a simple drop-in replacement for the simpler original MNIST dataset. Each image is one of 10 possible clothing item types, which are used as the 10 labelled classes. The full dataset, established by [Zalando](https://research.zalando.com/), is made up of a training set of 60 000 images and a test set of 10 000 images, where all images are 28 by 28 in pixel width. For our demonstration, we zero-pad each image to 32 by 32 pixels so that we can apply a similar model architecture as documented in  [β-VAE: Learning Basic Visual Concepts with a Constrained Variational Framework](https://openreview.net/pdf?id=Sy2fzU9gl) and [Understanding disentangling in β-VAE](https://arxiv.org/abs/1804.03599). <br/>
@@ -36,7 +38,9 @@ function get_train_loader(batch_size, shuffle::Bool)
     train_x, train_y = FashionMNIST.traindata(Float32)
     train_x = reshape(train_x, (28, 28, 1, :))
     train_x = parent(padarray(train_x, Fill(0, (2,2,0,0))))
-    return DataLoader(train_x, train_y, batchsize=batch_size, shuffle=shuffle, partial=false)
+    return DataLoader(
+        train_x, train_y, batchsize=batch_size, shuffle=shuffle, partial=false
+    )
 end
 {% endhighlight %}
 <br/>
@@ -85,19 +89,23 @@ end
 Flux allows custom training loop, this is great for allowing custom progress tracking and metric logging code. The `train()` function below takes in the three `Chain` components which make up our VAE, the `dataloader` described above, as well as some key training parameters. These include a weight decay regularisation parameter ($$\lambda$$), a hyperparameter which controls the relative importance of disentangling factors of variation ($$\beta$$), amongst others. For each batch, we calculate the loss as defined in `vae_loss()` and generate a pullback from which to calculate the gradients.
 
 {% highlight julia %}
-function train(encoder_μ, encoder_logvar, decoder, dataloader, num_epochs, λ, β, optimiser, save_dir)
-    # The training loop for the model
+function train(
+    encoder_μ, encoder_logvar, decoder, dataloader,
+    num_epochs, λ, β, optimiser, save_dir)
     trainable_params = Flux.params(encoder_μ, encoder_logvar, decoder)
 
     for epoch_num = 1:num_epochs
         acc_loss = 0.0
-        progress_tracker = Progress(length(dataloader), 1, "Training epoch $epoch_num: ")
+        progress_tracker = Progress(
+            length(dataloader), 1,
+            "Training epoch $epoch_num: "
+        )
         for (x_batch, y_batch) in dataloader
-            # pullback function returns the result (loss) and a pullback operator (back)
+            # pullback(..) returns the loss and a pullback operator (back)
             loss, back = pullback(trainable_params) do
                 vae_loss(encoder_μ, encoder_logvar, decoder, x_batch, β, λ)
             end
-            # Feed the pullback 1 to obtain the gradients and update then model parameters
+            # Feed the pullback 1 to obtain the gradients
             gradients = back(1f0)
             Flux.Optimise.update!(optimiser, trainable_params, gradients)
             if isnan(loss)
@@ -106,11 +114,12 @@ function train(encoder_μ, encoder_logvar, decoder, dataloader, num_epochs, λ, 
             acc_loss += loss
             next!(progress_tracker; showvalues=[(:loss, loss)])
         end
-        @assert length(dataloader) > 0
         avg_loss = acc_loss / length(dataloader)
         metrics = DataFrame(epoch=epoch_num, negative_elbo=avg_loss)
         println(metrics)
-        CSV.write(joinpath(save_dir, "metrics.csv"), metrics, header=(epoch_num==1), append=true)
+        CSV.write(
+            joinpath(save_dir, "metrics.csv"), metrics,
+            header=(epoch_num==1), append=true)
         save_model(encoder_μ, encoder_logvar, decoder, save_dir, epoch_num)
     end
     println("Training complete!")
@@ -135,7 +144,7 @@ function vae_loss(encoder_μ, encoder_logvar, decoder, x, β, λ)
     x̂ = decoder(z)
     # Negative reconstruction loss Ε_q[logp_x_z]
     logp_x_z = -sum(logitbinarycrossentropy.(x̂, x)) / batch_size
-    # KL(qᵩ(z|x)||p(z)) where p(z)=N(0,1) and qᵩ(z|x) models the encoder i.e. reverse KL
+    # KL(qᵩ(z|x)||p(z)) where p(z)=N(0,1) and qᵩ(z|x) models the encoder
     # The @. macro makes sure that all operates are elementwise
     kl_q_p = 0.5f0 * sum(@. (exp(logvar) + μ^2 - logvar - 1f0)) / batch_size
     # Weight decay regularisation term
@@ -160,10 +169,12 @@ function get_test_loader(batch_size, shuffle::Bool)
     return DataLoader(test_x, test_y, batchsize=batch_size, shuffle=shuffle)
 end
 
-function save_to_images(x_batch, save_dir::String, prefix::String, num_images::Int64)
+function save_to_images(x_batch, save_dir::String,
+                        prefix::String, num_images::Int64)
     @assert num_images <= size(x_batch)[4]
     for i=1:num_images
-        save(joinpath(save_dir, "$prefix-$i.png"), colorview(Gray, permutedims(x_batch[:,:,1,i], (2, 1))))
+        save(joinpath(save_dir, "$prefix-$i.png"),
+             colorview(Gray, permutedims(x_batch[:,:,1,i], (2, 1))))
     end
 end
 {% endhighlight %}
@@ -187,7 +198,8 @@ Now there is nothing left to do than load the trained VAE from disk, and set up 
 {% highlight julia %}
 function load_model(load_dir::String, epoch::Int)
     print("Loading model...")
-    @load joinpath(load_dir, "model-$epoch.bson") encoder_μ encoder_logvar decoder
+    load_path = joinpath(load_dir, "model-$epoch.bson")
+    @load load_path encoder_μ encoder_logvar decoder
     println("Done")
     return encoder_μ, encoder_logvar, decoder
 end
@@ -203,7 +215,9 @@ function visualise()
 
     for (x_batch, y_batch) in dataloader
         save_to_images(x_batch, "results", "test-image", num_images)
-        x̂_batch = reconstruct_images(encoder_μ, encoder_logvar, decoder, x_batch)
+        x̂_batch = reconstruct_images(
+            encoder_μ, encoder_logvar, decoder, x_batch
+        )
         save_to_images(x̂_batch, "results", "reconstruction", num_images)
         break
     end
@@ -237,18 +251,19 @@ To cite this post:
   url     = "http://127.0.0.1:4000/julia/flux/vae/2020/07/10/convolutional-vae-in-flux.html"
 }
 </code></pre></div></div>
+<br>
 
 ### References
-https://arxiv.org/pdf/1907.11891.pdf
-https://arxiv.org/pdf/2006.10599.pdf
-https://arxiv.org/abs/2007.03898
-https://arxiv.org/abs/1804.03599
-https://arxiv.org/abs/1312.6114
-https://openreview.net/pdf?id=Sy2fzU9gl
-@article{innes:2018,
-  author    = {Mike Innes},
-  title     = {Flux: Elegant Machine Learning with Julia},
-  journal   = {Journal of Open Source Software},
-  year      = {2018},
-  doi       = {10.21105/joss.00602},
-}
+[1] Innes, Mike. "Flux: Elegant machine learning with Julia." Journal of Open Source Software 3.25 (2018): 602.
+
+[2] Kingma, Diederik P., and Max Welling. "Auto-encoding variational bayes." arXiv preprint arXiv:1312.6114 (2013).
+
+[3] Burgess, Christopher P., et al. "Understanding disentangling in $\beta$-VAE." arXiv preprint arXiv:1804.03599 (2018).
+
+[4] Higgins, Irina, et al. "beta-vae: Learning basic visual concepts with a constrained variational framework." (2016).
+
+[5] Zhang, Mingtian, et al. "Variational f-divergence minimization." arXiv preprint arXiv:1907.11891 (2019).
+
+[6] Deasy, Jacob, Nikola Simidjievski, and Pietro Liò. "Constraining Variational Inference with Geometric Jensen-Shannon Divergence." arXiv preprint arXiv:2006.10599 (2020).
+
+[7] Vahdat, Arash, and Jan Kautz. "NVAE: A Deep Hierarchical Variational Autoencoder." arXiv preprint arXiv:2007.03898 (2020).
