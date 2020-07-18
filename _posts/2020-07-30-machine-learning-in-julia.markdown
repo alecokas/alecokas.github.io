@@ -171,3 +171,156 @@ Fortunately for the TF2 implementation, the accuracy metric was already compiled
 <br/>
 
 #### Module-based Comparison: Flux vs PyTorch
+In addition to the modular API, Flux supports a modular approach to building models as well. This section demonstrates how to build an equivalent model to those presented above using custom training loops and modular model design. Rather than comparing to Tensorflow again, this time the corresponding code PyTorch is used as the basis of comparison.
+
+To start off, a PyTorch dataloading function is set up using the built-in dataloader class.
+
+{% highlight python %}
+def get_dataloaders(batch_size, shuffle):
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+    ])
+
+    training_set = datasets.MNIST(
+        '../data', train=True, transform=transform, download=True)
+    test_set = datasets.MNIST(
+        '../data', train=False, transform=transform)
+
+    train_loader = torch.utils.data.DataLoader(
+        training_set, batch_size=batch_size, shuffle=shuffle)
+    test_loader = torch.utils.data.DataLoader(
+        test_set, batch_size=batch_size, shuffle=shuffle)
+
+    return train_loader, test_loader
+{% endhighlight %}
+
+We also define an accuracy function to be used during evaluation.
+{% highlight python %}
+def accuracy(model, test_loader, batch_size):
+    model.eval()
+    correct = 0.0
+    with torch.no_grad():
+        for batch_x, batch_y in test_loader:
+            pred_batch = model(batch_x)
+            pred_batch = pred_batch.argmax(dim=1, keepdim=True)
+            correct += pred_batch.eq(batch_y.view_as(pred_batch)).sum().item()
+
+    return correct / (len(test_loader) * batch_size)
+{% endhighlight %}
+<br/>
+
+The feedforward network type is defined using a `struct` type where each layer is an attribute. The arguments passed into the local function, `new(..)`, in the inner constructor are set to be the corresponding layer attributes. In contrast to the functional definition, the layers are not chained together. Therefore the forward pass behaviour is required to be defined explicitely. An anonymous funtion, similar to `__call__` in Python, is defined for this purpose and any object of type `FFNetwork` is able to re-use the forward pass implementation. In the hypothetical scenario where another model class is defined in the same script with its own anonymous forward pass function, the multiple dispatch paradigm would handle passing the instance to the appropirate forward pass function at runtime.  
+
+{% highlight julia %}
+struct FFNetwork
+    fc_1
+    dropout
+    fc_2
+    FFNetwork(
+        input_dim::Int, hidden_dim::Int, dropout::Float32, num_classes::Int
+    ) = new(
+        Dense(input_dim, hidden_dim, relu),
+        Dropout(dropout),
+        Dense(hidden_dim, num_classes),
+    )
+end
+
+function (net::FFNetwork)(x)
+    x = Flux.flatten(x)
+    return net.fc_2(net.dropout(net.fc_1(x)))
+end
+{% endhighlight %}
+
+The Pytorch class definition inherits from the `torch.nn.Module` base class which provides it with build in functionality such as easily moving onto GPU via `to(..)`, amongst others. In contrast to the relationship observed above, the forward pass definition for each class is built into the class definition. This means that the only way to re-use that code would be via some inheritance structure. This can very quickly lead to complicated inheritance patterns and forcing the class definitions themselves to take on more complexity than would otherwise be required. 
+
+{% highlight python %}
+class FFNetwork(Module):
+    def __init__(self, input_dims, hidden_dim, dropout_ratio, num_classes):
+        super(FFNetwork, self).__init__()
+        self.flat_image_dims = np.prod(input_dims)
+        self.fc_1 = torch.nn.Linear(self.flat_image_dims, hidden_dim)
+        self.dropout = torch.nn.Dropout(dropout_ratio)
+        self.fc_2 = torch.nn.Linear(hidden_dim, num_classes)
+
+    def forward(self, x):
+        x = x.view(-1, self.flat_image_dims)
+        return self.fc_2(self.dropout(F.relu(self.fc_1(x))))
+{% endhighlight %}
+<br/>
+
+
+
+
+
+{% highlight julia %}
+function cross_entropy_loss(model, x, y)
+    ŷ = model(x)
+    return logitcrossentropy(model(x), y)
+end
+
+function main(num_epochs, batch_size, shuffle, η)
+    train_loader, test_loader = get_dataloaders(batch_size, shuffle)
+
+    model = FFNetwork(28*28, 128, 0.2f0, 10)
+    trainable_params = Flux.params(model.fc_1, model.fc_2)
+    optimiser = ADAM(η)
+
+    for epoch = 1:num_epochs
+        acc_loss = 0.0
+        for (x_batch, y_batch) in train_loader
+            loss, back = pullback(trainable_params) do
+                cross_entropy_loss(model, x_batch, y_batch)
+            end
+            # Feed the pullback 1 to obtain the gradients and update then model parameters
+            gradients = back(1f0)
+            Flux.Optimise.update!(optimiser, trainable_params, gradients)
+            acc_loss += loss
+        end
+        avg_loss = acc_loss / length(train_loader)
+        println("Epoch: $epoch - loss: $avg_loss")
+    end
+
+    testmode!(model)
+    @show accuracy(train_loader, model)
+    @show accuracy(test_loader, model)
+    println("Complete!")
+end
+{% endhighlight %}
+
+
+
+{% highlight python %}
+def main(num_epochs, batch_size, shuffle):
+    train_loader, test_loader = get_dataloaders(batch_size, shuffle)
+
+    model = FFNetwork(
+        input_dims=(28, 28),
+        hidden_dim=128,
+        dropout_ratio=0.2,
+        num_classes=10
+    )
+    optimiser = Adam(model.parameters())
+
+    for epoch_idx in range(num_epochs):
+        loss = train_epoch(model, train_loader, optimiser)
+        print(f'Epoch {epoch_idx + 1} loss: {loss}')
+{% endhighlight %}
+
+{% highlight python %}
+def train_epoch(model, train_loader, optimiser):
+    loss = torch.nn.CrossEntropyLoss()
+    acc_loss = 0.0
+
+    model.train()
+    for batch_x, batch_y in train_loader:
+        optimiser.zero_grad()
+        pred_batch = model(batch_x)
+        train_loss = loss(pred_batch, batch_y)
+        train_loss.backward()
+        optimiser.step()
+        acc_loss += train_loss.item()
+    return acc_loss / len(train_loader)
+{% endhighlight %}
+
+<br/>
