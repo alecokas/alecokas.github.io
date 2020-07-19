@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Convolutional VAE in Flux"
-date:   2020-07-23 08:00:00 +0100
+date:   2020-07-22 08:00:00 +0100
 categories: Julia Flux VAE
 ---
 
@@ -248,7 +248,7 @@ To cite this post:
   author  = "Alexandros Kastanos",
   journal = "alecokas.github.io",
   year    = "2020",
-  url     = "http://alecokas.github.io/julia/flux/vae/2020/07/23/convolutional-vae-in-flux.html"
+  url     = "http://alecokas.github.io/julia/flux/vae/2020/07/22/convolutional-vae-in-flux.html"
 }
 </code></pre></div></div>
 <br>
