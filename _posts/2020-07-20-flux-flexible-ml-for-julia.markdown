@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Flux: The Flexible Machine Learning Framework for Julia"
-date:   2020-07-09 10:00:00 +0000
+date:   2020-07-20 08:00:00 +0100
 categories: Julia Flux
 ---
 
@@ -27,7 +27,7 @@ If you're interested in the Julia language in general, I'd recommend watching [t
 ## The Magic of Flux
 Flux is a fairly young framework with the first commit made in 2016. Consequentially it has been built with modern deep learning architectures in mind. Sequential layers can be chained together with ease, the [Zygote.jl](https://fluxml.ai/Zygote.jl/latest/) dependency takes care of automatic differentiation, and full GPU support is provided by [CUDA.jl](https://juliagpu.gitlab.io/CUDA.jl/), all the while keeping the Flux code-base to a fraction of the size of PyTorch and Tensorflow.
 
-To showcase the framework, we compare two Flux implementations of the typical MNIST digit classifier to their Tensorflow and Pytorch equivalents. If you just want to jump straight into the full scripts, have a look at my Github repository <<>>.
+To showcase the framework, we compare two Flux implementations of the typical MNIST digit classifier to their Tensorflow and Pytorch equivalents. If you just want to jump straight into the full scripts, have a look at my [Github repository](https://github.com/alecokas/ml-framework-comparison).
 
 ### Functional Comparison: Flux vs Tensorflow
 With Tensorflow being the most widely used deep learning framework in industry, it is worth comparing the Flux API to the Tensorflow functional API.
@@ -333,7 +333,7 @@ To cite this post:
   author  = "Alexandros Kastanos",
   journal = "alecokas.github.io",
   year    = "2020",
-  url     = "<<>>"
+  url     = "https://alecokas.github.io/julia/flux/2020/07/09/flux-flexible-ml-for-julia.html"
 }
 </code></pre></div></div>
 <br>
