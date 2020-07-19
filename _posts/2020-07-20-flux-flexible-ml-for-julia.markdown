@@ -333,7 +333,7 @@ To cite this post:
   author  = "Alexandros Kastanos",
   journal = "alecokas.github.io",
   year    = "2020",
-  url     = "https://alecokas.github.io/julia/flux/2020/07/09/flux-flexible-ml-for-julia.html"
+  url     = "https://alecokas.github.io/julia/flux/2020/07/20/flux-flexible-ml-for-julia.html"
 }
 </code></pre></div></div>
 <br>
