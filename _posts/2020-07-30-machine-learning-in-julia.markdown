@@ -5,35 +5,35 @@ date:   2020-07-09 10:00:00 +0000
 categories: Julia Flux
 ---
 
-<!-- <div style="text-align: justify"> -->
-With Julia having established itself as the 6th most loved language in this year's [Stack Overflow Developer survey](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages) and [JuliaCon 2020](https://juliacon.org/2020/) kicking off in the next couple weeks, I thought this might be a good time to talk about machine learning in Julia. In this post, We'll touch on Julia and some of its more interesting features. Thereafter we'll introduce Flux, a pure-Julia machine learning framework, and compare simple MNIST classifier in Flux to the equivalent Pytorch and Tensorflow 2 implementations.
-<!-- </div> -->
+With Julia jumping up the ranks as one of the most loved languages in this year's [Stack Overflow Developer survey](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages) and [JuliaCon 2020](https://juliacon.org/2020/) kicking off in the next few days, I thought this might be a good time to talk about machine learning in Julia. In this post, we'll touch on Julia and some of its more interesting features before moving on to talk about Flux, a pure-Julia machine learning framework. By comparing a simple MNIST classifier in Flux to the equivalent Pytorch and Tensorflow 2 implementations, we begin to get an idea of the strengths and fun quirks of doing machine learning in Flux.
 <br/>
 
 <div style="text-align:center"><img src="/post_pdfs/machine_learning_in_julia/flux_logo.png" />
 </div><br/>
 
 ## The Julia Language
-<!-- <div style="text-align: justify"><p> -->
-The founders of Julia were looking to create a language which was geared towards interactive scientific computing, whilst at the same time supporting more advanced software engineering processes via directo JIT compilation to native code. To facilitate this dual purpose, Julia is dyamically typed with the default behaviour being to allow values of any type when no type specification is provided. Additional expressiveness is permissible via optional typing which provides some of the efficiency gains typically associated with static languages. Having spent my formative programming years writing C++ code, and now almost exclusively working in Python, the option to type my machine learning code is incredibly appealing.
+The founders of Julia were looking to create a language which was geared towards interactive scientific computing, whilst at the same time supporting more advanced software engineering processes via direct JIT-compilation to native code. To facilitate this dual-purpose, Julia uses dynamic typing with the default behaviour being to allow values of any type when no type specification is provided. Further expressiveness is permissible in Julia via optional typing which provides some of the efficiency gains typically associated with static languages. Having spent my formative programming years writing C++ code, and now almost exclusively working in Python, the option to type my machine learning code is incredibly appealing.
 
-The REPL interactive prompt has number of great features, such as built in help (which you can get to by simpy typing `?`) or the built in package manager (which can be accessed via `]`).
+The REPL interactive prompt has several great features, such as built-in help (which you can get to by simply typing `?`) or the built-in package manager (which can be accessed via `]`).
 <br/>
 
 <div style="text-align:center"><img src="/post_pdfs/machine_learning_in_julia/REPL.png" />
 </div><br/>
 
-One of the advantages of Julia is that it supports multiple dispatch, a paradigm which means that we never need to know argument types before passing them into a method. This allows us to write generic algorithms which can be easily re-used - a property which makes an open source machine learning framework, like Flux, an enticing prospect. Stefan Karpinski elegantly contrasts this behaviour with single-dispatch, object-orientated languages like C++ in [The Unreasonable Effectiveness of Multiple Dispatch](https://www.youtube.com/watch?v=kc9HwsxE1OY).
+One of the advantages of Julia is that it supports multiple dispatch, a paradigm which means that we never need to know argument types before passing them into a method. This allows us to write generic algorithms which can be easily re-used - a property which makes an open-source machine learning framework, like Flux, an enticing prospect. Stefan Karpinski elegantly contrasts this behaviour with single-dispatch object-orientated languages like C++ in his talk, [The Unreasonable Effectiveness of Multiple Dispatch](https://www.youtube.com/watch?v=kc9HwsxE1OY).
 If you're interested in the Julia language in general, I'd recommend watching [this interview](https://www.youtube.com/watch?v=VgZm53qgj9Q) with two of the co-founders, Viral Shah and Jeff Bezanson.
 <br/>
 
 ## The Magic of Flux
 Flux is a fairly young framework with the first commit made in 2016. Consequentially it has been built with modern deep learning architectures in mind. Sequential layers can be chained together with ease, the [Zygote.jl](https://fluxml.ai/Zygote.jl/latest/) dependency takes care of automatic differentiation, and full GPU support is provided by [CUDA.jl](https://juliagpu.gitlab.io/CUDA.jl/), all the while keeping the Flux code-base to a fraction of the size of PyTorch and Tensorflow.
 
-To showcase the framework, we compare two Flux implementations of the customary digit classifier on the MNIST dataset to their Tensorflow and Pytorch equivalents.
+To showcase the framework, we compare two Flux implementations of the typical MNIST digit classifier to their Tensorflow and Pytorch equivalents. If you just want to jump straight into the full scripts, have a look at my Github repository <<>>.
 
 ### Functional Comparison: Flux vs Tensorflow
-With Tensorflow (TF) being the most widely used deep learning framework in industry, it is worth comparing the Flux API to the Tensorflow functional API. In Flux, we build sequential models by simply chaining together a series of Flux layers. This is demonstrated below where we construct a feed-forward network of two dense layers which follow on from a simple flattening layer. A typical ReLU activation is used in the hidden layer along with dropout for regularisation. This is all neatly wrapped up in a Julia function for us to use in our script.
+With Tensorflow being the most widely used deep learning framework in industry, it is worth comparing the Flux API to the Tensorflow functional API.
+
+#### Model Definition
+In Flux, we build sequential models by simply chaining together a series of Flux layers. This is demonstrated below where we construct a feed-forward network of two dense layers which follow on from a simple flattening layer. A typical ReLU activation is used in the hidden layer along with dropout for regularisation. This is all neatly wrapped up in a Julia function for us to use in our script.
 
 {% highlight julia %}
 function create_model(input_dim, dropout_ratio, hidden_dim, num_classes)
@@ -46,7 +46,7 @@ function create_model(input_dim, dropout_ratio, hidden_dim, num_classes)
 end
 {% endhighlight %}
 
-Using the functional Keras API, the equivalent TF2 code looks incredibly similar.
+In Tensorflow 2, the recommended method for building eager models is to use the functional Keras API. In the snippet below, we see the equivalent code looks incredibly similar to the Flux implementation.
 
 {% highlight python %}
 def create_model(input_dims, dropout_ratio, hidden_dim, num_classes):
@@ -57,9 +57,10 @@ def create_model(input_dims, dropout_ratio, hidden_dim, num_classes):
         tf.keras.layers.Dense(num_classes)
     ])
 {% endhighlight %}
-<br/>
+<!-- <br/> -->
 
-Before we start setting up training code, the MNIST data needs to be collated in an easily ingestible way. The `Flux.Data` module has a special `Dataloader` type which handles batching, iteration, and shuffling over the data. Combined with the `onehotbatch` function, this makes generating loaders for the training and test set data pretty straightforward. Notice that in this function, the optional typing of function arguments is showcased.  
+#### Dataloaders
+Before we can start training these models, the MNIST data needs to be collated in an easily ingestible way. The `Flux.Data` module has a special `Dataloader` type which handles batching, iteration, and shuffling over the data. Combined with the `onehotbatch` function, this makes generating loaders for the training and test set data pretty straightforward. Notice that in this function, the optional typing of function arguments is showcased.  
 
 {% highlight julia %}
 function get_dataloaders(batch_size::Int, shuffle::Bool)
@@ -76,7 +77,7 @@ function get_dataloaders(batch_size::Int, shuffle::Bool)
 end
 {% endhighlight %}
 
-Since MNIST is a simple and small dataset, we just use a straightforward implementation for collating the data in TF2.
+Since MNIST is a simple and small dataset, for the purposes of this demonstration a straightforward implementation for collating the data in Tensroflow is used.
 
 {% highlight python %}
 def get_data():
@@ -85,11 +86,12 @@ def get_data():
     x_train, x_test = x_train / 255.0, x_test / 255.0
     return x_train, y_train, x_test, y_test
 {% endhighlight %}
-<br/>
+<!-- <br/> -->
 
-In our main function we use the two functions defined above to create the dataloaders and create the model. The trainable parameters, which will be passed to the train function, are collected into an object using `Flux.params(model)`. Flux offers a number of optimisers such as `RMSProp`, `ADADelta`, and `AdaMax`, but in this demonstration `ADAM`. Notice that the learning rate is set using the unicode character `η`. This is a really great feature in Julia which makes Flux implementations look closer to the mathematical model as published. The instantiation of the optimiser is followed by the loss function definition, which thanks to the concise Julia syntax, also exhibits a neat mathematical quality. The choice of `logitcrossentropy` (which applies the softmax function to the logit output internally) is commonly used as a more stable alternative to `crossentropy` in classification problems.
+#### Training Loop
+At the start of the main function, we create the dataloaders and instantiate the model. The trainable parameters, which will be passed to the train function, are collected into an object using `Flux.params(model)`. Flux offers several optimisers such as `RMSProp`, `ADADelta`, and `AdaMax`, but in this demonstration `ADAM` is used. Notice that the learning rate is set using the unicode character `η`. Simply being able to drop unicode characters into any Julia code is a great feature which makes Flux implementations look closer to the mathematical model as published in the original article or journal. The instantiation of the optimiser is followed by the loss function definition, which thanks to the concise Julia syntax, also exhibits a neat mathematical quality. The choice of `logitcrossentropy` (which applies the softmax function to the logit output internally) is commonly used as a more stable alternative to `crossentropy` in classification problems.
 
-All four of the above mentioned components come together in the `Flux.train!` loop, which optimises trainable parameters given the loss function, optimiser, and the training dataloader. The loop is run a number of times using the `@epochs` macro. Notice that the model is contained in the loss function definition and so it does not need to be passed in explicitely. We simply indicate which paramters we want to be optimised. 
+All four of the above-mentioned components come together in the `Flux.train!` loop, which optimises trainable parameters given the loss function, optimiser, and the training dataloader. The loop is run a number of times using the `@epochs` macro. Notice that the model is contained in the loss function definition and so it does not need to be passed in explicitly. We simply indicate which parameters we want to be optimised. 
 
 {% highlight julia %}
 function main(num_epochs, batch_size, shuffle, η)
@@ -106,7 +108,7 @@ function main(num_epochs, batch_size, shuffle, η)
 end
 {% endhighlight %}
 
-The TF2 implementation has a similar flow. The data is loaded, model initialised, and the loss function defined. Unlike in the Flux implementation the model is not present in the loss function. Tensorflow builds the computational graph at the point of `compile` on the model and only executes after calling `fit`.
+The Tensorflow implementation has a similar flow. The data is loaded, model initialised, and the loss function defined. Unlike in the Flux implementation, the model is not present in the loss function. Tensorflow builds the computational graph at the point of calling `compile` on the model and only executes after calling `fit`.
 
 {% highlight python %}
 def main(num_epochs, optimiser):
@@ -130,9 +132,10 @@ def main(num_epochs, optimiser):
     model.fit(x_train, y_train, epochs=num_epochs)
 
 {% endhighlight %}
-<br/>
+<!-- <br/> -->
 
-Once the models have been trained, running evaluation on the training and test sets is a natural next step. In this case, the classification accuracy is selected as the metric to judge model performance. A quick helper function is defined for this purpose.
+#### Evaluation
+Once the models have been trained, running evaluation on the training and test sets is a natural next step. In this case, the classification accuracy is selected as the metric to judge model performance. A quick helper function is defined in Julia for this purpose.
 
 {% highlight julia %}
 function accuracy(data_loader, model)
@@ -145,7 +148,7 @@ function accuracy(data_loader, model)
 end
 {% endhighlight %}
 
-The following code snipped is inserted directly after training the model in the main function above. The first step puts the model into evaluation mode, which has the effect of turining off dropout in our Flux model. This is imperative for ensuring that the Flux model behaves as expected during inference and validation. The `accuracy(..)` helper function is then ussed to generate accuracies for the training and test data.  
+The following code snippet is inserted directly after training the model in the main function above. The first step puts the model into evaluation mode, which has the effect of turning off dropout in our Flux model. This is imperative for ensuring that the Flux model behaves as expected during inference and validation. The `accuracy` helper function is then used to generate accuracies for the training and test data.  
 
 {% highlight julia %}
     # Later in `main(..)`
@@ -154,7 +157,7 @@ The following code snipped is inserted directly after training the model in the 
     @show accuracy(test_loader, model)
 {% endhighlight %}
 
-Fortunately for the TF2 implementation, the accuracy metric was already compiled with the model. As a result, evaluation results are trivially computed using `model.evaluate(..)`.
+Fortunately for the Tensorflow implementation, the accuracy metric was already compiled with the model. As a result, evaluation results are trivially computed using `model.evaluate`.
 
 {% highlight python %}
     # Later in `main(..)`
@@ -166,10 +169,10 @@ Fortunately for the TF2 implementation, the accuracy metric was already compiled
 <br/>
 
 ### Module-based Comparison: Flux vs PyTorch
-In addition to the functional API, Flux supports a modular approach to building models as well. This section demonstrates how to build an equivalent model to those presented above using custom training loops and modular model design. Rather than comparing to Tensorflow again, this time the corresponding code PyTorch is used as the basis of comparison.
+In addition to the functional API, Flux supports a modular approach to building models as well. This section demonstrates how to build an equivalent model to those presented above using custom training loops and modular model design. Rather than comparing to Tensorflow again, this time the corresponding PyTorch code is used as the basis of comparison.
 
+#### PyTorch Helper Functions
 To start off, a PyTorch dataloading function is set up using the built-in dataloader class.
-
 {% highlight python %}
 def get_dataloaders(batch_size, shuffle):
     transform = transforms.Compose([
@@ -203,9 +206,10 @@ def accuracy(model, test_loader, batch_size):
 
     return correct / (len(test_loader) * batch_size)
 {% endhighlight %}
-<br/>
+<!-- <br/> -->
 
-The feedforward network type is defined using a `struct` type where each layer is an attribute. The arguments passed into the local function, `new(..)`, in the inner constructor are set to be the corresponding layer attributes. In contrast to the functional definition, the layers are not chained together. Therefore the forward pass behaviour is required to be defined explicitely. An anonymous funtion, similar to `__call__` in Python, is defined for this purpose and any object of type `FFNetwork` is able to re-use the forward pass implementation. In the hypothetical scenario where another model class is defined in the same script with its own anonymous forward pass function, the multiple dispatch paradigm would handle passing the instance to the appropirate forward pass function at runtime.  
+#### The Modular Model
+The feedforward network is defined using a `struct` type where each layer is an attribute. The arguments passed to the `new(..)` function in the inner constructor are set to the corresponding object attributes using their relative order. In contrast to the functional definition, the layers are not chained together. Therefore the forward pass behaviour is required to be defined explicitly. An anonymous function, used in a similar way as the `__call__` function in Python, is defined for this purpose. Any object of type `FFNetwork` can re-use the forward pass implementation. In the hypothetical scenario where another model class is defined in the same script with its own anonymous forward pass function, the multiple dispatch paradigm would handle passing the instance to the appropriate forward pass function at runtime.  
 
 {% highlight julia %}
 struct FFNetwork
@@ -227,7 +231,7 @@ function (net::FFNetwork)(x)
 end
 {% endhighlight %}
 
-The Pytorch class definition inherits from the `torch.nn.Module` base class which provides it with build in functionality such as easily moving onto GPU via `to(..)`, amongst others. In contrast to the relationship observed above, the forward pass definition for each class is built into the class definition. This means that the only way to re-use that code would be via some inheritance structure. This can very quickly lead to complicated inheritance patterns which forces the class definitions to take on more complexity than would otherwise be required. 
+The PyTorch class definition inherits from the `torch.nn.Module` base class which provides it with built-in functionality such as being able to easily move the model onto a GPU via `to(..)`, amongst others. In contrast to the relationship observed above, the forward pass definition for each class is built into the class definition. This means that the only way to re-use that code would be via some inheritance structure. This can very quickly lead to complicated inheritance patterns which force the class definitions to take on more complexity than would otherwise be required. 
 
 {% highlight python %}
 class FFNetwork(Module):
@@ -242,9 +246,10 @@ class FFNetwork(Module):
         x = x.view(-1, self.flat_image_dims)
         return self.fc_2(self.dropout(F.relu(self.fc_1(x))))
 {% endhighlight %}
-<br/>
+<!-- <br/> -->
 
-Flux permits custom training loops to enable more sophisticated metric tracking and loss formulations. The trade-off with this approach is that it requires more work on the software side. For each batch in each epoch the loss is manually accumulated and the model parameters updated. The `pullback(..)` function, imported from the Zygote, automatically calculates the loss, and returns a pullback, which can be used to obtain the gradients for all trainable parameters by passing in `1f0`. A difference to note is that we have to specifically pass each trainable layer from the modular model into the `params(..)` function rather than simply passing the chained functional model. Although this classification example is rather simple and does not take full advantage of the explicit pullback call, models such as GANs and VAEs benefit greatly from the increased flexibility.
+#### Custom Training Loops
+Flux permits custom training loops to enable more sophisticated metric tracking and loss formulations. The trade-off with this approach is that it requires more work on the software side. For each batch in each epoch, the loss is manually accumulated and the model parameters updated. The `pullback(..)` function, imported from Zygote, automatically calculates the loss and returns a pullback, which can be used to obtain the gradients for all trainable parameters by passing in `1f0`. A difference to note is that modular Flux models require that each trainable layer must be specifically passed into the `params` function rather than simply passing the full chained functional model. Although this classification example is rather simple and does not take full advantage of the explicit pullback call, models such as GANs and VAEs benefit greatly from the increased flexibility.
 
 
 {% highlight julia %}
@@ -276,7 +281,7 @@ function main(num_epochs, batch_size, shuffle, η)
 end
 {% endhighlight %}
 
-Similarly, the PyTorch implementation requires a more granular treatment of the training loop. In `train_epoch(..)` the average loss over the full epoch is accumulated an returned. For each batch, gradients are obtained by calling `backwards()` on the loss object returned from the cross entropy loss function. The model parameters are then updated using `optimiser.step()` and gradients are reset to zero using `optimiser.zero_grad()`. Overall the Flux and PyTorch custom training loops have a very similar feel with the key differences being that in PyTorch we must manually reset the gradients to zero and in Flux each layer with trainable parameters needs to be explicitly provided to the pullback function.
+Similarly, the PyTorch implementation requires a more granular treatment of the training loop. In `train_epoch` the average loss over the full epoch is accumulated and returned. For each batch, gradients are obtained by calling `backwards()` on the loss object returned from the cross entropy loss function. The model parameters are then updated using `optimiser.step()` and gradients are reset to zero using `optimiser.zero_grad()`. Overall the Flux and PyTorch custom training loops have a very similar feel with the key difference being that in PyTorch the gradients are required to be reset to zero manually, while in Flux each layer with trainable parameters needs to be explicitly provided to the pullback function.
 
 {% highlight python %}
 def train_epoch(model, train_loader, optimiser):
@@ -308,7 +313,7 @@ def main(num_epochs, batch_size, shuffle):
         print(f'Epoch {epoch_idx + 1} loss: {loss}')
 {% endhighlight %}
 
-Evaluation is unchanged in the modular Flux implementation while in PyTorch we simply call the accuracy function defined above.
+Evaluation is unchanged in the modular Flux implementation. In PyTorch we simply call the accuracy helper function defined above.
 
 {% highlight python %}
 train_acc = accuracy(model, train_loader, batch_size)
@@ -317,8 +322,8 @@ print(f'train_acc: {train_acc}  -  test_acc: {test_acc}')
 {% endhighlight %}
 <br/>
 
-### Take Aways
-Flux provides enough functionality and readability to make it an interesting competitor to the two more established machine learning frameworks. From a personal perspective, I think that Flux is a fantastic option for research projects and a much needed break from the monotony of Python in my machine learning life. I'm quite excited about the Flux's progress and I am certainly hoping to see more tools and papers publishing their work in Flux! Hopefully we have more pretrained NLP models making their way into Flux soon. However, from an industry perspective the shear extent to which PyTorch and Tensorflow have been battle-tested makes them a more reliable option which continue to have more off-the-shelf functionlity and pre-trained models. 
+### Final Thoughts
+Flux provides enough functionality and readability to make it an interesting competitor to the two more established machine learning frameworks. From a personal perspective, I think that Flux is a fantastic option for research projects and a much-needed break from the monotony of Python in my machine learning life. I'm quite excited about Flux's progress over the last few years and I am certainly hoping to see more tools and papers publishing their work in Flux - particularly in NLP. From an industry user perspective, the sheer extent to which PyTorch and Tensorflow have been battle-tested makes them a more reliable option which continues to have more off-the-shelf functionality and pre-trained models than Flux. 
 
 <br/>
 To cite this post:
@@ -328,7 +333,7 @@ To cite this post:
   author  = "Alexandros Kastanos",
   journal = "alecokas.github.io",
   year    = "2020",
-  url     = ""
+  url     = "<<>>"
 }
 </code></pre></div></div>
 <br>
