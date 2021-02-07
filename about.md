@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 <div style="text-align: justify">
-Currently, I work as a machine learning engineer at Ocado Technology in the 10x team. My responcibilities span the research, implementation, and early stage productionisation of machine learning models. I'm particularly interested in Graph Neural Networks, Natural Language Processing, and Speech Recognition.
+Currently, I work as a machine learning engineer at Ocado Technology in the 10x team. My responsibilities span the research, implementation, and early stage productionisation of machine learning models. I'm particularly interested in Graph Neural Networks, Natural Language Processing, and Speech Recognition. My favourite tools include Python, PyTorch, NLTK, Docker, and Julia.
 </div> <br/>
 
 <div style="text-align: justify">
