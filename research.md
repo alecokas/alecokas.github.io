@@ -12,7 +12,7 @@ permalink: /research/
 <span style="color:dimgrey">Presented in lecture session: Speech Recognition: Confidence, Errors, and OOVs </span>.   
 [arxiv](https://arxiv.org/pdf/1910.11933.pdf), [ICASSP](https://ieeexplore.ieee.org/document/9053264), [code](https://github.com/alecokas/BiLatticeRNN-Confidence), [slides](/PDFs/slides/Black-Box-ASR-ICASSP-2020.pdf)
 
-* A. Kastanos and T. Martin, **Graph Convolutional Network for Swahili News Classification**, <br /> EACL AfricaNLP Workshop, 2021. [paper](https://arxiv.org/abs/2103.09325), [code](https://github.com/alecokas/swahili-text-gcn)
+* A. Kastanos and T. Martin, **Graph Convolutional Network for Swahili News Classification**, <br /> EACL AfricaNLP Workshop, 2021. [paper](https://arxiv.org/abs/2103.09325), [code](https://github.com/alecokas/swahili-text-gcn), [slides](/PDFs/slides/GCN_for_Swahili_News_EACL_2021.pdf), [poster](/PDFs/posters/GCN_for_Swahili_News.pdf)
 
 
 ### Posters
