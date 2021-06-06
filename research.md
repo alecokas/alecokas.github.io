@@ -16,7 +16,7 @@ permalink: /research/
 
 
 ### Posters and Extended Abstracts
-* A. Kastanos and T. Martin, **Graph Convolutional Network for Swahili News Classification**, <br /> NAACL SIGTYP Workshop, 2021. [paper](https://sigtyp.io/workshops/2021/abstracts/13.pdf), [code](https://github.com/alecokas/swahili-text-gcn), [presentation](https://youtu.be/Xf4-8UeRAPc)
+* A. Kastanos and T. Martin, **Graph Convolutional Network for Swahili News Classification**, <br /> NAACL SIGTYP Workshop, 2021. [abstract](https://sigtyp.io/workshops/2021/abstracts/13.pdf), [code](https://github.com/alecokas/swahili-text-gcn), [presentation](https://youtu.be/Xf4-8UeRAPc)
 
 * A. Kastanos, A. Ragni, M.J.F. Gales, **Confidence Scores for Sequence Data**, Presented at the Deep Learning Indaba 2019. [poster](/PDFs/posters/Deep_Learning_Indaba_2019.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
 
