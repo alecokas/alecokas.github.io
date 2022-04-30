@@ -7,7 +7,9 @@ permalink: /research/
 ### Thesis
 * A. Kastanos, **Uncertainty and Confidence Scores for Sequence Data**, University of Cambridge, August 2019. [pdf](/PDFs/thesis/Uncertainty_and_Confidence_Scores_in_Sequence_Data.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
 
-### Conference Publications
+### Publications
+* A. Ragni, M. J. F. Gales; O. Rose; K. M. Knill; A. Kastanos; Q. Li; P. M. Ness, **Increasing Context for Estimating Confidence Scores in Automatic Speech Recognition**, IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 30, pp. 1319-1329, 2022. [paper](https://ieeexplore.ieee.org/abstract/document/9739834)
+
 * A. Kastanos and T. Martin, **Graph Convolutional Network for Swahili News Classification**, <br /> EACL AfricaNLP Workshop, 2021. [paper](https://arxiv.org/abs/2103.09325), [code](https://github.com/alecokas/swahili-text-gcn), [slides](/PDFs/slides/GCN_for_Swahili_News_EACL_2021.pdf), [poster](/PDFs/posters/GCN_for_Swahili_News.pdf)
 
 * A. Kastanos, A. Ragni, and M.J.F. Gales, **Confidence Estimation for Black Box Automatic Speech Recognition Systems Using Lattice Recurrent Neural Networks**, ICASSP, 2020.    
