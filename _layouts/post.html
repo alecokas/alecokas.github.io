@@ -4,6 +4,14 @@ layout: default
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
+    {%- if page.cover_image -%}
+    <figure class="post-cover">
+      <img src="{{ page.cover_image | relative_url }}" alt="{{ page.cover_image_alt | default: page.title | escape }}">
+      {%- if page.cover_image_caption -%}
+      <figcaption class="post-cover__caption">{{ page.cover_image_caption }}</figcaption>
+      {%- endif -%}
+    </figure>
+    {%- endif -%}
     <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
     <p class="post-meta">
       <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">

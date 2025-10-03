@@ -3,6 +3,23 @@ layout: default
 ---
 
 <div class="home">
+  {%- assign hero_image = page.hero.image | default: site.hero.image -%}
+  {%- if hero_image -%}
+  <section class="site-hero">
+    <div class="site-hero__media">
+      <img src="{{ hero_image | relative_url }}" alt="{{ page.hero.alt | default: site.hero.alt | default: site.title | escape }}">
+    </div>
+    <div class="site-hero__content">
+      <h1 class="site-hero__title">{{ page.hero.title | default: site.hero.title | default: site.title }}</h1>
+      {%- if page.hero.subtitle or site.hero.subtitle -%}
+      <p class="site-hero__subtitle">{{ page.hero.subtitle | default: site.hero.subtitle }}</p>
+      {%- endif -%}
+      {%- if page.hero.cta_url or site.hero.cta_url -%}
+      <a class="button button--primary" href="{{ page.hero.cta_url | default: site.hero.cta_url | relative_url }}">{{ page.hero.cta_label | default: site.hero.cta_label | default: "Learn more" }}</a>
+      {%- endif -%}
+    </div>
+  </section>
+  {%- endif -%}
   {%- if page.title -%}
     <h1 class="page-heading">{{ page.title }}</h1>
   {%- endif -%}
@@ -10,7 +27,7 @@ layout: default
   {{ content }}
 
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <h2 class="post-list-heading">{{ page.list_title | default: "Machine Learning Blog" }}</h2>
     <ul class="post-list">
       {%- for post in site.posts -%}
       <li>
