@@ -4,9 +4,6 @@ title: Research
 permalink: /research/
 ---
 
-### Thesis
-* A. Kastanos, **Uncertainty and Confidence Scores for Sequence Data**, University of Cambridge, August 2019. [pdf](/PDFs/thesis/Uncertainty_and_Confidence_Scores_in_Sequence_Data.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
-
 ### Publications
 * A. Ragni, M. J. F. Gales; O. Rose; K. M. Knill; A. Kastanos; Q. Li; P. M. Ness, **Increasing Context for Estimating Confidence Scores in Automatic Speech Recognition**, IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 30, pp. 1319-1329, 2022. [paper](https://ieeexplore.ieee.org/abstract/document/9739834)
 
@@ -23,3 +20,7 @@ permalink: /research/
 * A. Kastanos, A. Ragni, M.J.F. Gales, **Confidence Scores for Sequence Data**, Presented at the Deep Learning Indaba 2019. [poster](/PDFs/posters/Deep_Learning_Indaba_2019.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
 
 * Y. Dubois, A. Kastanos, D. Lines, B. Melman, **Understanding Disentangling in VAE**, University of Cambridge, March 2019. [poster](/PDFs/posters/Understanding_Disentangling_in_VAE.pdf), [code](https://github.com/YannDubs/disentangling-vae)
+
+### Theses
+* A. Kastanos, **Uncertainty and Confidence Scores for Sequence Data**, University of Cambridge, August 2019. [pdf](/PDFs/thesis/Uncertainty_and_Confidence_Scores_in_Sequence_Data.pdf), [code](https://github.com/alecokas/BiLatticeRNN-Confidence)
+* A. Kastanos, **On Political Nihilism, Economic Power, and Artificial Intelligence**, Birkbeck, University of London, September 2025. [forthcoming]

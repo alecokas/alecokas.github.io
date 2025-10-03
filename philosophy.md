@@ -6,7 +6,7 @@ cover_image: /assets/werfen.JPG
 cover_image_alt: View near Werfen
 ---
 
-Over the two years that I was involved in running the Philosophy Society we hosted 14 guest talks and 11 reading groups.
+Over the two years that I was involved in running the Birkbeck Philosophy Society, we hosted 14 guest talks and 11 reading groups.
 
 ### Hosted by the Birkbeck Philosophy Society (2023 - 2025)
 
