@@ -4,10 +4,12 @@ title: About
 permalink: /about/
 ---
 
-I am a machine learning engineer with research interests in Graph Neural Networks, Natural Language Processing, and Speech Recognition. The process of coming up with novel solutions to difficult modelling problems and selecting the appropriate evaluation criteria in messy real-world contexts is a passion of mine. Some of my favourite tools include Python, PyTorch, NLTK, Docker, and Julia.
+## Machine Learning and AI Governance
 
-Currently, I work as a machine learning engineer at Deliveroo and am studying for an MA in philosophy at Birkbeck, University of London. At Deliveroo my projects focus on the robustness and tracibility of existing pricing models and developing new pricing strategies. Previously, I worked at Ocado Technology where my responsibilities spanned the research, implementation, and early-stage productionisation of machine learning models. I completed an MPhil in Machine Learning and Machine Intelligence at the University of Cambridge and studied electrical engineering at the University of the Witwatersrand in South Africa. I briefly worked as a software engineer at Peralex Electronics where I investigated whether deep learning techniques can be used to replace and improve traditional signal detection systems.
+I have six years of experience working as a machine learning engineer across three companies. Coming up with novel solutions to difficult modelling problems is what I do. I really enjoy working in environments where evaluating the effectiveness of the machine learning intervention is core to the challenge. Early in my career my research interestes were in in Graph Neural Networks, Natural Language Processing, and Speech Recognition. More recently my focus has been in the price optimisation space. These projects tend to focus on ensuring robustness and tracibility of existing pricing models while developing new pricing strategies. In 2025 I took on a leadership role in AI Governance where I have been able to use technology to solve compliance challenges in a faced-paced environment.
 
-My interest areas in philosophy centre around topics in the political, social, and ethical domains. I write on [responsible AI](https://www.whattodoaboutnow.com/post/responsible-ai-responsible-to-whom) and enjoy listening to podcasts (give [Revisionist History](http://revisionisthistory.com/) a listen).
+## Philosophy and Social Theory
+In addition to my professional and academic experience in machine learning, I also have an MA in Philosophy. You can find me attending philosophy talks around London and have written on topics such as [responsible AI](https://www.whattodoaboutnow.com/post/responsible-ai-responsible-to-whom) and African philosophy (more in the works!). My interest areas are primarily political, social, and ethical philosophy.
 
-If you want to find out more about my professional skills, take a look at my [Github profile](https://github.com/alecokas) and my [resume](/PDFs/resume/A-Kastanos-CV.pdf). 
+## Contact
+If you want to find out more about my professional skills, take a look at my [resume](/PDFs/resume/A-Kastanos-CV.pdf). 
