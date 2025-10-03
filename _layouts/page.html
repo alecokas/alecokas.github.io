@@ -4,6 +4,14 @@ layout: default
 <article class="post">
 
   <header class="post-header">
+    {%- if page.cover_image -%}
+    <figure class="post-cover">
+      <img src="{{ page.cover_image | relative_url }}" alt="{{ page.cover_image_alt | default: page.title | escape }}">
+      {%- if page.cover_image_caption -%}
+      <figcaption class="post-cover__caption">{{ page.cover_image_caption }}</figcaption>
+      {%- endif -%}
+    </figure>
+    {%- endif -%}
     <h1 class="post-title">{{ page.title | escape }}</h1>
   </header>
 
