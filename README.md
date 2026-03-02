@@ -82,8 +82,3 @@ cover_image_alt: Abstract network visualization
 cover_image_caption: Recent work and publications
 ---
 ```
-
-## Troubleshooting
-
-- **Bundler says the Ruby version is wrong**: install/switch to the Ruby version in `Gemfile`, then re-run `bundle install`.
-- **Apple Silicon + Rosetta Homebrew mismatch**: avoid mixing `/usr/local` (Intel/Rosetta) with `/opt/homebrew` (ARM64). Use an ARM64 terminal and prefer ARM64 Homebrew installs.
