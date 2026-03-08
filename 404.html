@@ -3,22 +3,61 @@ layout: default
 ---
 
 <style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
+  .error-shell {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
   }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
+
+  .error-card {
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    padding: 2.75rem 2.25rem 2.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 18px 45px rgba(15, 23, 42, 0.08),
+      0 0 0 1px rgba(148, 163, 184, 0.18);
+  }
+
+  .error-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    margin-bottom: 1.75rem;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.08em;
+    color: #1d4ed8;
+    background: radial-gradient(circle at 30% 20%, #bfdbfe, #dbeafe);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+  }
+
+  .error-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    letter-spacing: -0.04em;
+  }
+
+  .error-body {
+    margin: 0;
+    font-size: 1rem;
+    color: #4b5563;
   }
 </style>
 
-<div class="container">
-  <h1>404</h1>
-
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+<div class="error-shell">
+  <div class="error-card">
+    <div class="error-code">404</div>
+    <p class="error-title"><strong>Page not found :(</strong></p>
+    <p class="error-body">The requested page could not be found.</p>
+  </div>
 </div>
